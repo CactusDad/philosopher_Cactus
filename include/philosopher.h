@@ -6,7 +6,7 @@
 /*   By: aboudarg <aboudarg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 20:29:50 by aboudarg          #+#    #+#             */
-/*   Updated: 2022/03/15 10:59:01 by aboudarg         ###   ########.fr       */
+/*   Updated: 2022/03/15 22:36:24 by aboudarg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 typedef struct s_philo
 {
 	pthread_t	philo;
+	int			id;
 	int			time_to_die;
 	int			time_to_eat;
 	int			time_to_sleep;
@@ -29,7 +30,8 @@ typedef struct s_philo
 typedef struct s_table
 {
 	t_philo				*philos;
-	int					*fork;
+	int					num_philo;
+	pthread_mutex_t		*fork;
 	long long			current_time;
 	long long			last_time;
 }	t_table;
