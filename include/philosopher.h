@@ -25,12 +25,13 @@ typedef struct s_philo
 	int			time_to_eat;
 	int			time_to_sleep;
 	int			numotephilom_eat;
+	int			num;
+	pthread_mutex_t			*ptrfork;
 }	t_philo;
 
 typedef struct s_table
 {
 	t_philo				*philos;
-	int					num_philo;
 	pthread_mutex_t		*fork;
 	long long			current_time;
 	long long			last_time;

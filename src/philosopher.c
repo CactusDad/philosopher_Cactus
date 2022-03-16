@@ -26,27 +26,48 @@ int max(int i, int j)
 		return (i);
 	return (j);
 }
-int go = 0;
-void *routine(void *table)
+void	take_fork(int id, int time, int state)
 {
-	t_table *t;
+	if (state)
+		printf("%d %d has taken a right fork\n",time, id);
+	else
+		printf("%d %d has taken a left fork\n",time, id);
 
-	t = ((t_table *)table);
-	t->current_time = get_time();
-	while (1)
+}
+
+void	eating(int id)
+{
+	printf("timestamp_in_ms %d is eating\n", id);
+	usleep(1000);
+}
+
+void	thinking(int id)
+{
+	printf("timestamp_in_ms %d is thinking\n",id);
+	usleep(1000);
+}
+void	sleeping(int id)
+{
+	printf("timestamp_in_ms %d is sleeping\n", id);
+	usleep(1000);
+}
+void *routine(void *philo)
+{
+	t_philo *t;
+		t = ((t_philo *)philo);
+	while(1)
 	{
-		pthread_mutex_lock(&t->fork[min(t->philos->id, (t->philos->id + 1) % t->num_philo)]);
-		pthread_mutex_lock(&t->fork[max(t->philos->id, (t->philos->id + 1) % t->num_philo)]);
-		// system("clear");
-		// long long sec = (get_time() - ((t_table *)table)->current_time);
-		// if (sec >= 200)
-		// {
-		// 	printf("%lld\n", sec);
-		// 	break;
-		// }
-		printf("num:%d\n",go++);
-		pthread_mutex_unlock(&t->fork[t->philos->id]);
-		pthread_mutex_unlock(&t->fork[(t->philos->id + 1) % t->num_philo]);
+		// printf("id: %d\n",t->id);
+		pthread_mutex_lock(&t->ptrfork[min(t->id, (t->id + 1) % t->num)]);
+		take_fork(t->id, get_time(), 1);
+		pthread_mutex_lock(&t->ptrfork[max(t->id, (t->id + 1) % t->num)]);
+		take_fork(t->id, get_time(), 0);
+		eating(t->id);
+		// sleep(1);
+		pthread_mutex_unlock(&t->ptrfork[(t->id + 1) % t->num]);
+		pthread_mutex_unlock(&t->ptrfork[t->id]);
+		sleeping(t->id);
+		thinking(t->id);
 	}
 	return (NULL);
 }
@@ -59,12 +80,16 @@ void philo_init(t_table *table, int num)
 	table->philos = malloc(sizeof(t_philo) * num + 1);
 	while (i < num)
 	{
-		if (pthread_create(&table->philos[i].philo, NULL, routine, table) != 0)
+		
+		table->philos[i].id = i;
+		table->philos[i].num = num;
+		table->philos[i].ptrfork = table->fork;
+		if (pthread_create(&table->philos[i].philo, NULL, routine, &table->philos[i]) != 0)
 		{
 			printf("Failed to create thread\n");
 			break;
 		}
-		table->philos->id = i;
+		// printf("hey%d\n",table->philos[i].id);
 		i++;
 	}
 }
@@ -112,17 +137,18 @@ void mutex_destroy(t_table *table, int num)
 int main(int argc, char *argv[])
 {
 	t_table table;
+	int philo_num;
 
-	table.num_philo = atoi(argv[1]);
+	philo_num = atoi(argv[1]);
 	// gettimeofday(&table.last_time, NULL);
 	if (argc < 4)
 	{
 		printf("Missing args\n");
 		return (0);
 	}
-	mutex_init(&table, table.num_philo);
-	philo_init(&table, table.num_philo);
-	wait_thread(&table, table.num_philo);
-	mutex_destroy(&table, table.num_philo);
+	mutex_init(&table, philo_num);
+	philo_init(&table, philo_num);
+	wait_thread(&table, philo_num);
+	mutex_destroy(&table, philo_num);
 	return (0);
 }
