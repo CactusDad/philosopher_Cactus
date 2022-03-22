@@ -16,25 +16,45 @@
 # include<pthread.h>
 # include<stdlib.h>
 # include<sys/time.h>
+# include<stdio.h>
+# include<unistd.h>
 
+typedef struct s_ph_states
+{
+  int   num_of_philos;
+  int   time_to_die;
+  int   time_to_eat;
+  int   time_to_sleep;
+  int   numotechphilo_must_eat;
+  long long start_time;
+  pthread_mutex_t *forks;
+  pthread_mutex_t *locks;
+}   t_ph_states;
 typedef struct s_philo
 {
-	pthread_t	philo;
-	int			id;
-	int			time_to_die;
-	int			time_to_eat;
-	int			time_to_sleep;
-	int			numotephilom_eat;
-	int			num;
-	pthread_mutex_t			*ptrfork;
-}	t_philo;
+  int id;
+  pthread_t	philo;
+  t_ph_states *state;
+  long long last_eat;
+  int num_eat;
 
-typedef struct s_table
-{
-	t_philo				*philos;
-	pthread_mutex_t		*fork;
-	long long			current_time;
-	long long			last_time;
-}	t_table;
+} t_philo;
+
+int     ft_is_numbers_error(char **numbers, int size);
+int     ft_isdigit(int c);
+void    ft_putstr(char *str);
+int     ft_atoi(const char *str);
+ /*------------------methods of thread----------------*/
+ void philo_init(t_philo *philosophers, t_ph_states *states);
+ void wait_thread(t_philo *philosophers, int num);
+ void mutex_init(t_ph_states *states);
+ void mutex_destroy(t_ph_states *states);
+ void    *routine(void *obj);
+ /*-------------------philosophers state--------------------*/
+ long long get_time(void);
+ void eating(t_philo *philo);
+ void thinking(t_philo *philo);
+ void sleeping(t_philo *philo);
+ void	take_fork(t_philo *philo, int state);
 
 #endif

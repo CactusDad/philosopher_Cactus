@@ -3,152 +3,47 @@
 #include <pthread.h>
 #include <sys/time.h>
 #include <unistd.h>
-
-long long get_time(void)
+void error_event(void)
 {
-	struct timeval time;
-	long long mill_time;
-
-	gettimeofday(&time, NULL);
-	mill_time = time.tv_sec * 1000LL + time.tv_usec / 1000;
-	return (mill_time);
+	printf("Error\n");
+	exit(2);
 }
-int min(int i, int j)
-{
-	if (i < j)
-		return (i);
-	return (j);
-}
-
-int max(int i, int j)
-{
-	if (i > j)
-		return (i);
-	return (j);
-}
-void	take_fork(int id, int time, int state)
-{
-	if (state)
-		printf("%d %d has taken a right fork\n",time, id);
-	else
-		printf("%d %d has taken a left fork\n",time, id);
-
-}
-
-void	eating(int id)
-{
-	printf("timestamp_in_ms %d is eating\n", id);
-	usleep(1000);
-}
-
-void	thinking(int id)
-{
-	printf("timestamp_in_ms %d is thinking\n",id);
-	usleep(1000);
-}
-void	sleeping(int id)
-{
-	printf("timestamp_in_ms %d is sleeping\n", id);
-	usleep(1000);
-}
-void *routine(void *philo)
-{
-	t_philo *t;
-		t = ((t_philo *)philo);
-	while(1)
-	{
-		// printf("id: %d\n",t->id);
-		pthread_mutex_lock(&t->ptrfork[min(t->id, (t->id + 1) % t->num)]);
-		take_fork(t->id, get_time(), 1);
-		pthread_mutex_lock(&t->ptrfork[max(t->id, (t->id + 1) % t->num)]);
-		take_fork(t->id, get_time(), 0);
-		eating(t->id);
-		// sleep(1);
-		pthread_mutex_unlock(&t->ptrfork[(t->id + 1) % t->num]);
-		pthread_mutex_unlock(&t->ptrfork[t->id]);
-		sleeping(t->id);
-		thinking(t->id);
-	}
-	return (NULL);
-}
-
-void philo_init(t_table *table, int num)
-{
+void	get_num(t_ph_states *state, char *argv[])
+{	
 	int i;
 
 	i = 0;
-	table->philos = malloc(sizeof(t_philo) * num + 1);
-	while (i < num)
-	{
-		
-		table->philos[i].id = i;
-		table->philos[i].num = num;
-		table->philos[i].ptrfork = table->fork;
-		if (pthread_create(&table->philos[i].philo, NULL, routine, &table->philos[i]) != 0)
-		{
-			printf("Failed to create thread\n");
-			break;
-		}
-		// printf("hey%d\n",table->philos[i].id);
-		i++;
-	}
+	state->num_of_philos = ft_atoi(argv[0]);
+	state->time_to_die = ft_atoi(argv[1]); 
+	state->time_to_eat = ft_atoi(argv[2]);
+	state->time_to_sleep =  ft_atoi(argv[3]);
+	if (argv[4] != NULL)
+		state->numotechphilo_must_eat = ft_atoi(argv[4]);
+	if (state->num_of_philos <= 0 || state->time_to_die <= 0
+		|| state->time_to_eat <= 0 || state->time_to_sleep <= 0
+		|| ( argv[4] != NULL && state->numotechphilo_must_eat <= 0))
+		error_event();		
+	
 }
+/*######################threads###########################*/
 
-void wait_thread(t_table *table, int num)
-{
-	int i;
-
-	i = 0;
-	while (i < num)
-	{
-		if (pthread_join(table->philos[i].philo, NULL) != 0)
-		{
-			printf("Faild to join thread\n");
-			break;
-		}
-		i++;
-	}
-}
-void mutex_init(t_table *table, int num)
-{
-	int i;
-
-	i = 0;
-	table->fork = malloc(sizeof(pthread_mutex_t) * num + 1);
-	while (i < num)
-	{
-		pthread_mutex_init(&table->fork[i], NULL);
-		i++;
-	}
-}
-
-void mutex_destroy(t_table *table, int num)
-{
-	int i;
-
-	i = 0;
-	while (i < num)
-	{
-		pthread_mutex_destroy(&table->fork[i]);
-		i++;
-	}
-}
 
 int main(int argc, char *argv[])
-{
-	t_table table;
-	int philo_num;
+{	
+	t_ph_states state;
+	t_philo *philosophers;
+     if (argc < 5 || argc > 6 || ft_is_numbers_error(argv + 1, argc - 1))
+        {
+			printf("Error1\n");
+			exit(1);
+		}
+	get_num(&state, argv + 1);
+	philosophers = malloc(sizeof(t_philo) * state.num_of_philos);
+	mutex_init(&state);
+	philo_init(philosophers, &state);
+	wait_thread(philosophers, state.num_of_philos);
+	mutex_destroy(&state);
+	
 
-	philo_num = atoi(argv[1]);
-	// gettimeofday(&table.last_time, NULL);
-	if (argc < 4)
-	{
-		printf("Missing args\n");
-		return (0);
-	}
-	mutex_init(&table, philo_num);
-	philo_init(&table, philo_num);
-	wait_thread(&table, philo_num);
-	mutex_destroy(&table, philo_num);
 	return (0);
 }

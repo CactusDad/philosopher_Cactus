@@ -14,7 +14,8 @@
 INC= -I include
 S = src/
 CHK = tobonus
-SRCS			=  $(S)philosopher.c
+SRCS			=  $(S)philosopher.c $(S)uitls/ft_atoi.c $(S)uitls/fuitls.c $(S)check_num.c \
+					$(S)creation_thread.c $(S)routine_job.c $(S)states.c
 
 SRCBS			=  $(S)philosopher.c
  
