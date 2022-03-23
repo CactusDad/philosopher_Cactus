@@ -19,6 +19,12 @@
 # include<stdio.h>
 # include<unistd.h>
 
+#define RIGHT_FORK 1
+#define LEFT_FORK 0
+#define EATING 2
+#define SLEEPING 3
+#define THINKING 4
+
 typedef struct s_ph_states
 {
   int   num_of_philos;
@@ -28,7 +34,9 @@ typedef struct s_ph_states
   int   numotechphilo_must_eat;
   long long start_time;
   pthread_mutex_t *forks;
+  pthread_mutex_t  print_lock;
   pthread_mutex_t *locks;
+  int   death;
 }   t_ph_states;
 typedef struct s_philo
 {

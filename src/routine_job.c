@@ -23,7 +23,26 @@ int max(int i, int j)
 		return (i);
 	return (j);
 }
+int	ft_state(t_philo *philo, int state)
+{
+	if (philo->state->death != 1)
+	{
+		pthread_mutex_lock(&philo->state->print_lock);
+		if (state == RIGHT_FORK)
+			take_fork(philo , 1);
+		else if (state == LEFT_FORK)
+			take_fork(philo, 0);
+		else if (state == EATING)
+			eating(philo);
+		else if (state == SLEEPING)
+			sleeping(philo);
+		else if (state == THINKING)
+			thinking(philo);
+		pthread_mutex_unlock(&philo->state->print_lock);
 
+	}
+	return (0);
+}
 void    *routine(void *obj)
 {
     t_philo *philo;
@@ -38,20 +57,19 @@ void    *routine(void *obj)
 		// printf("die %lld philo %d time_to_die %d\n", get_time() - philo->state->start_time, philo->id , philo->state->time_to_die);
 		// 	exit(2);
 		// }
-		pthread_mutex_lock(&philo->state->forks[min(philo->id, (philo->id + 1) % philo->state->num_of_philos)]);
-		take_fork(philo, 1);
-		pthread_mutex_lock(&philo->state->forks[max(philo->id, (philo->id + 1) % philo->state->num_of_philos)]);
-		take_fork(philo, 0);
-		eating(philo);
-		if (philo->state->numotechphilo_must_eat > philo->num_eat)
-			philo->num_eat++;
-		else
-			return (NULL);
-
+		pthread_mutex_lock(&philo->state->forks[philo->id]);
+		ft_state(philo, RIGHT_FORK);
+		pthread_mutex_lock(&philo->state->forks[(philo->id + 1) % philo->state->num_of_philos]);
+		ft_state(philo, LEFT_FORK);
+		ft_state(philo, EATING);
+		// if (philo->state->numotechphilo_must_eat > philo->num_eat)
+		// 	philo->num_eat++;
+		// else
+		// 	return (NULL);
 		pthread_mutex_unlock(&philo->state->forks[(philo->id + 1) % philo->state->num_of_philos]);
 		pthread_mutex_unlock(&philo->state->forks[philo->id]);
-		sleeping(philo);
-		thinking(philo);
+		ft_state(philo, SLEEPING);
+		ft_state(philo, THINKING);
 		// exit(2);
 	}
     return (NULL);
