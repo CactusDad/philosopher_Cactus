@@ -62,7 +62,13 @@ void    *routine(void *obj)
 		pthread_mutex_lock(&philo->state->forks[(philo->id + 1) % philo->state->num_of_philos]);
 		ft_state(philo, LEFT_FORK);
 		ft_state(philo, EATING);
-		// if (philo->state->numotechphilo_must_eat > philo->num_eat)
+		if (philo->num_eat == 0)
+		{
+			printf("%d philo %d\n",philo->num_eat,philo->id);
+			pthread_mutex_unlock(&philo->state->forks[(philo->id + 1) % philo->state->num_of_philos]);
+			pthread_mutex_unlock(&philo->state->forks[philo->id]);
+			return (NULL);
+		}
 		// 	philo->num_eat++;
 		// else
 		// 	return (NULL);

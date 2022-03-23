@@ -10,7 +10,7 @@ void philo_init(t_philo *philosophers, t_ph_states *states)
 		
         philosophers[i].state = states;
 		philosophers[i].id = i;
-		philosophers[i].num_eat = 0;
+		philosophers[i].num_eat = states->numotechphilo_must_eat;
 		if (i == 0)
 			states->start_time = get_time();
 		philosophers[i].last_eat = -1; 

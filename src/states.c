@@ -14,6 +14,7 @@ void eating(t_philo *philo)
 	philo->last_eat = get_time() - philo->state->start_time;
 	if (philo->state->death != 1)
 	{
+		philo->num_eat--;
 	printf("\033[0;33m%lld %d is eating\n\033[0m", (get_time() - philo->state->start_time), philo->id);
 	my_sleep(philo->state->time_to_eat, philo);
 	}

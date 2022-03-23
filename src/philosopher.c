@@ -26,16 +26,28 @@ void	get_num(t_ph_states *state, char *argv[])
 	
 }
 /*######################threads###########################*/
+
 int	die_signal(t_philo *philo)
 {
 	int i;
 
 	i = 0;
+	int k;
+
+	k = 0;
 	while (1)
 	{
 		if(((get_time() - philo[i].state->start_time) - philo[i].last_eat) >= philo[i].state->time_to_die)
 		{
-			printf("%lld %d died",((get_time() - philo[i].state->start_time) - philo[i].last_eat), philo[i].id);
+			while( k < philo->state->num_of_philos)
+			{
+				if (philo[k].num_eat)
+					break;
+				else if (k == philo->state->num_of_philos - 1)
+					return (0);
+				k++;
+			}
+			printf("%lld %d died\n",((get_time() - philo[i].state->start_time) - philo[i].last_eat), philo[i].id);
 			philo[i].state->death = 1;
 		}
 		if (philo[i].state->death == 1)
