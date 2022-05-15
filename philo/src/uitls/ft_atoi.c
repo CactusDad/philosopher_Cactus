@@ -6,7 +6,7 @@
 /*   By: aboudarg <aboudarg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 20:05:22 by aboudarg          #+#    #+#             */
-/*   Updated: 2022/03/06 20:42:03 by aboudarg         ###   ########.fr       */
+/*   Updated: 2022/05/15 21:37:00 by aboudarg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,14 @@ static int	ft_isspace(const char *str, int counter)
 	return (counter);
 }
 
-void	error(long num)
+int	error(long num)
 {
 	if (num > INT_MAX && num != 2147483648)
 	{
-		ft_putstr("Error\n");
-		exit(0);
+		ft_putstr("Error?\n");
+		return (EXIT_FAILURE);
 	}
+	return (EXIT_SUCCESS);
 }
 
 int	ft_atoi(const char *str)
@@ -52,7 +53,8 @@ int	ft_atoi(const char *str)
 	while (ft_isdigit(str[counter]))
 	{
 		number = (number * 10) + (str[counter++] - '0');
-		error(number);
+		if (error(number) == EXIT_FAILURE)
+			return (-1);
 		if (number > max && sign == -1)
 			return (0);
 		if (number >= max && sign == 1)

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   check_num.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aboudarg <aboudarg@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/05/15 18:28:35 by aboudarg          #+#    #+#             */
+/*   Updated: 2022/05/15 18:56:13 by aboudarg         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philosopher.h"
 
 int	ft_is_numbers_error(char **numbers, int size)
@@ -23,4 +35,3 @@ int	ft_is_numbers_error(char **numbers, int size)
 	}
 	return (0);
 }
-
