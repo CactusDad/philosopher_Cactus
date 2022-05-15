@@ -6,7 +6,7 @@
 /*   By: aboudarg <aboudarg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/15 19:39:06 by aboudarg          #+#    #+#             */
-/*   Updated: 2022/05/15 20:51:31 by aboudarg         ###   ########.fr       */
+/*   Updated: 2022/05/15 22:05:05 by aboudarg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,29 +22,15 @@ long long	get_time(void)
 	return (mill_time);
 }
 
-int	min(int i, int j)
-{
-	if (i < j)
-		return (i);
-	return (j);
-}
-
-int	max(int i, int j)
-{
-	if (i > j)
-		return (i);
-	return (j);
-}
-
 int	ft_state(t_philo *philo, int state)
 {
 	if (philo->state->death != 1)
 	{
 		pthread_mutex_lock(&philo->state->print_lock);
 		if (state == RIGHT_FORK)
-			take_fork(philo, 1);
+			take_fork(philo);
 		else if (state == LEFT_FORK)
-			take_fork(philo, 0);
+			take_fork(philo);
 		else if (state == EATING)
 			eating(philo);
 		else if (state == SLEEPING)
