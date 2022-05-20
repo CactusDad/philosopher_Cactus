@@ -6,7 +6,7 @@
 /*   By: aboudarg <aboudarg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 20:29:50 by aboudarg          #+#    #+#             */
-/*   Updated: 2022/05/15 22:04:39 by aboudarg         ###   ########.fr       */
+/*   Updated: 2022/05/19 18:49:23 by aboudarg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,10 @@ void		eating(t_philo *philo);
 void		thinking(t_philo *philo);
 void		sleeping(t_philo *philo);
 void		take_fork(t_philo *philo);
+void		messages(t_philo *philo, char *str);
 /*--------------------------control-----------------------*/
 int			die_signal(t_philo *philo);
+/*------------------------time----------------------------*/
+long long	get_current_time(t_philo *philo);
+void	my_sleep( long long milsec, t_philo *philo);
 #endif

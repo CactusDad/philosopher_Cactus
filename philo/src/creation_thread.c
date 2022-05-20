@@ -6,7 +6,7 @@
 /*   By: aboudarg <aboudarg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/15 20:39:20 by aboudarg          #+#    #+#             */
-/*   Updated: 2022/05/15 20:52:27 by aboudarg         ###   ########.fr       */
+/*   Updated: 2022/05/20 02:00:53 by aboudarg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,21 +37,21 @@ void	philo_init(t_philo *philosophers, t_ph_states *states)
 	}
 }
 
-void	wait_thread(t_philo *philosophers, int num)
-{
-	int	i;
+// void	wait_thread(t_philo *philosophers, int num)
+// {
+// 	int	i;
 
-	i = 0;
-	while (i < num)
-	{
-		if (pthread_join(philosophers[i].philo, NULL) != 0)
-		{
-			printf("Faild to join thread\n");
-			break ;
-		}
-		i++;
-	}
-}
+// 	i = 0;
+// 	while (i < num)
+// 	{
+// 		if (pthread_join(philosophers[i].philo, NULL) != 0)
+// 		{
+// 			printf("Faild to join thread\n");
+// 			break ;
+// 		}
+// 		i++;
+// 	}
+// }
 
 void	mutex_init(t_ph_states *states)
 {
@@ -64,16 +64,18 @@ void	mutex_init(t_ph_states *states)
 		pthread_mutex_init(&states->forks[i], NULL);
 		i++;
 	}
+	pthread_mutex_init(&states->print_lock, NULL);
 }
 
-void	mutex_destroy(t_ph_states *states)
-{
-	int	i;
+// void	mutex_destroy(t_ph_states *states)
+// {
+// 	int	i;
 
-	i = 0;
-	while (i < states->num_of_philos)
-	{
-		pthread_mutex_destroy(&states->forks[i]);
-		i++;
-	}
-}
+// 	i = 0;
+// 	while (i < states->num_of_philos)
+// 	{
+// 		pthread_mutex_destroy(&states->forks[i]);
+// 		i++;
+// 	}
+// 	pthread_mutex_destroy(&states->print_lock);
+// }

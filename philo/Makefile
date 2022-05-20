@@ -6,7 +6,7 @@
 #    By: aboudarg <aboudarg@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/11 13:36:13 by aboudarg          #+#    #+#              #
-#    Updated: 2022/05/15 18:56:54 by aboudarg         ###   ########.fr        #
+#    Updated: 2022/05/19 18:51:45 by aboudarg         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,8 @@ INC= -I include
 S = src/
 CHK = tobonus
 SRCS			=  $(S)philosopher.c $(S)uitls/ft_atoi.c $(S)uitls/fuitls.c $(S)check_num.c \
-					$(S)creation_thread.c $(S)routine_job.c $(S)states.c $(S)observation.c
+					$(S)creation_thread.c $(S)routine_job.c $(S)states.c $(S)observation.c \
+					$(S)time.c $(S)messages.c
 
 SRCBS			=  $(S)philosopher.c
  

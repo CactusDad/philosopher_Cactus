@@ -6,7 +6,7 @@
 /*   By: aboudarg <aboudarg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/15 19:39:06 by aboudarg          #+#    #+#             */
-/*   Updated: 2022/05/15 22:05:05 by aboudarg         ###   ########.fr       */
+/*   Updated: 2022/05/19 23:41:59 by aboudarg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,51 +22,28 @@ long long	get_time(void)
 	return (mill_time);
 }
 
-int	ft_state(t_philo *philo, int state)
-{
-	if (philo->state->death != 1)
-	{
-		pthread_mutex_lock(&philo->state->print_lock);
-		if (state == RIGHT_FORK)
-			take_fork(philo);
-		else if (state == LEFT_FORK)
-			take_fork(philo);
-		else if (state == EATING)
-			eating(philo);
-		else if (state == SLEEPING)
-			sleeping(philo);
-		else if (state == THINKING)
-			thinking(philo);
-		pthread_mutex_unlock(&philo->state->print_lock);
-	}
-	return (0);
-}
-
 void	*routine(void *obj)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)obj;
-	while (TRUE)
+	while (philo->state->death != 1)
 	{
+		if (philo->num_eat == 0)
+			return (NULL);
 		pthread_mutex_lock(&philo->state->forks[philo->id]);
-		ft_state(philo, RIGHT_FORK);
+		messages(philo,"has taken a fork right");
 		pthread_mutex_lock(&philo->state->forks[(philo->id + 1)
 			% philo->state->num_of_philos]);
-		ft_state(philo, LEFT_FORK);
-		ft_state(philo, EATING);
-		if (philo->num_eat == 0)
-		{
-			pthread_mutex_unlock(&philo->state->forks[(philo->id + 1)
-				% philo->state->num_of_philos]);
-			pthread_mutex_unlock(&philo->state->forks[philo->id]);
-			return (NULL);
-		}
+		messages(philo, "has taken a fork left");
+		messages(philo, "is eating");
+		eating(philo);
+		pthread_mutex_unlock(&philo->state->forks[philo->id]);
 		pthread_mutex_unlock(&philo->state->forks[(philo->id + 1)
 			% philo->state->num_of_philos]);
-		pthread_mutex_unlock(&philo->state->forks[philo->id]);
-		ft_state(philo, SLEEPING);
-		ft_state(philo, THINKING);
+		messages(philo, "is sleeping");
+		my_sleep(philo->state->time_to_sleep, philo);
+		messages(philo, "is thinking");
 	}
 	return (NULL);
 }
