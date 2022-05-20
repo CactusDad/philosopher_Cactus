@@ -6,52 +6,41 @@
 /*   By: aboudarg <aboudarg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/15 20:39:20 by aboudarg          #+#    #+#             */
-/*   Updated: 2022/05/20 02:00:53 by aboudarg         ###   ########.fr       */
+/*   Updated: 2022/05/20 20:09:09 by aboudarg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosopher.h"
 
-void	philo_init(t_philo *philosophers, t_ph_states *states)
+void	create_philo(t_philo *philos, t_ph_states *states, int count)
 {
 	int	i;
 
-	i = 0;
+	i = count;
 	while (i < states->num_of_philos)
 	{
-		philosophers[i].state = states;
-		philosophers[i].id = i;
-		philosophers[i].num_eat = states->numotechphilo_must_eat;
+		philos[i].state = states;
+		philos[i].id = i;
+		philos[i].num_eat = states->numotechphilo_must_eat;
 		if (i == 0)
 			states->start_time = get_time();
-		philosophers[i].last_eat = -1;
-		if (pthread_create(&philosophers[i].philo, NULL, routine,
-				&philosophers[i]) != 0)
+		philos[i].last_eat = 0;
+		if (pthread_create(&philos[i].philo, NULL, routine,
+				&philos[i]) != 0)
 		{
 			printf("Failed to create thread\n");
 			break ;
 		}
-		if (i % 2 == 0)
-			usleep(50);
-		i++;
+		i += 2;
 	}
 }
 
-// void	wait_thread(t_philo *philosophers, int num)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (i < num)
-// 	{
-// 		if (pthread_join(philosophers[i].philo, NULL) != 0)
-// 		{
-// 			printf("Faild to join thread\n");
-// 			break ;
-// 		}
-// 		i++;
-// 	}
-// }
+void	philo_init(t_philo *philosophers, t_ph_states *states)
+{
+	create_philo(philosophers, states, 0);
+	usleep(120);
+	create_philo(philosophers, states, 1);
+}
 
 void	mutex_init(t_ph_states *states)
 {
@@ -66,16 +55,3 @@ void	mutex_init(t_ph_states *states)
 	}
 	pthread_mutex_init(&states->print_lock, NULL);
 }
-
-// void	mutex_destroy(t_ph_states *states)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (i < states->num_of_philos)
-// 	{
-// 		pthread_mutex_destroy(&states->forks[i]);
-// 		i++;
-// 	}
-// 	pthread_mutex_destroy(&states->print_lock);
-// }

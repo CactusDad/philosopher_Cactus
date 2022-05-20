@@ -6,7 +6,7 @@
 /*   By: aboudarg <aboudarg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 20:29:50 by aboudarg          #+#    #+#             */
-/*   Updated: 2022/05/19 18:49:23 by aboudarg         ###   ########.fr       */
+/*   Updated: 2022/05/20 15:45:57 by aboudarg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <sys/time.h>
 # include <stdio.h>
 # include <unistd.h>
+# include <limits.h>
 
 # define RIGHT_FORK 1
 # define LEFT_FORK 0
@@ -33,7 +34,7 @@ typedef struct s_ph_states
 	int					time_to_eat;
 	int					time_to_sleep;
 	int					numotechphilo_must_eat;
-	long long			start_time;
+	size_t				start_time;
 	pthread_mutex_t		*forks;
 	pthread_mutex_t		print_lock;
 	pthread_mutex_t		*locks;
@@ -45,7 +46,7 @@ typedef struct s_philo
 	int			id;
 	pthread_t	philo;
 	t_ph_states	*state;
-	long long	last_eat;
+	size_t		last_eat;
 	int			num_eat;
 
 }	t_philo;
@@ -61,7 +62,7 @@ void		mutex_init(t_ph_states *states);
 void		mutex_destroy(t_ph_states *states);
 void		*routine(void *obj);
 /*-------------------philosophers state--------------------*/
-long long	get_time(void);
+size_t		get_time(void);
 void		eating(t_philo *philo);
 void		thinking(t_philo *philo);
 void		sleeping(t_philo *philo);
@@ -70,6 +71,6 @@ void		messages(t_philo *philo, char *str);
 /*--------------------------control-----------------------*/
 int			die_signal(t_philo *philo);
 /*------------------------time----------------------------*/
-long long	get_current_time(t_philo *philo);
-void	my_sleep( long long milsec, t_philo *philo);
+size_t		get_current_time(t_philo *philo);
+void		my_sleep(size_t milsec, t_philo *philo);
 #endif

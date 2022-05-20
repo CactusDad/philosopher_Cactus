@@ -6,7 +6,7 @@
 /*   By: aboudarg <aboudarg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/15 17:30:02 by aboudarg          #+#    #+#             */
-/*   Updated: 2022/05/20 02:02:17 by aboudarg         ###   ########.fr       */
+/*   Updated: 2022/05/20 20:11:33 by aboudarg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,6 @@ int	main(int argc, char *argv[])
 	mutex_init(&state);
 	philo_init(philosophers, &state);
 	if (die_signal(philosophers))
-	{
-		usleep(400);
 		return (0);
-	}
-	// wait_thread(philosophers, state.num_of_philos);
-	// mutex_destroy(&state);
 	return (EXIT_FAILURE);
 }
